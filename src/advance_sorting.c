@@ -191,7 +191,7 @@ void menu_advance_sorting(void) {
         // mengukur waktu (end)
         double elapsed = (double)(end - start) / CLOCKS_PER_SEC;
 
-        printf("\nData SETELAH sorting — %s (%d kata pertama):\n", nama_algo, DISPLAY_COUNT);
+        printf("\nData SETELAH sorting - %s (%d kata pertama):\n", nama_algo, DISPLAY_COUNT);
         cetak_pemisah();
         tampil_str(g_work, g_word_count);
         cetak_pemisah();

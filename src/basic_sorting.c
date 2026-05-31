@@ -128,7 +128,7 @@ void menu_sorting_dasar(void) {
         double elapsed = (double)(end - start) / CLOCKS_PER_SEC;
 
         /* Menampilkan hasil pengurutan */
-        printf("\nData SETELAH sorting — %s (%d data pertama):\n",
+        printf("\nData SETELAH sorting - %s (%d data pertama):\n",
                nama_algo, DISPLAY_COUNT);
         cetak_pemisah();
         tampil_int(data, MAX_DATA);
