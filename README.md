@@ -11,4 +11,4 @@ Program CLI berbasis **bahasa C** yang mengimplementasikan 6 algoritma sorting d
 |----|------|-----|
 | 1  | Virzi Mayhand Syahputra | 250810701100077 |
 | 2  | Nabil Aulia Dika        | 250810701100090 |
-| 3  | Ahmad Wazir Sahfikri    | 2508107011000 |
+| 3  | Ahmad Wazir Sahfikri    | 250810701100050 |
