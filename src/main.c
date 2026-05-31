@@ -1,5 +1,5 @@
-#include "advance_sort.h"
-#include "basic_sort.h"
+#include "advance_sorting.h"
+#include "basic_sorting.h"
 #include <stdio.h>
 
 static void tampil_header(void) {
