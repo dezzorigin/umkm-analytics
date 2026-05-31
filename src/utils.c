@@ -28,3 +28,27 @@ void shuffle_str(char arr[][MAX_WORD_LEN], int n) {
     swap_str(arr[i], arr[j]);
   }
 }
+
+void cetak_pemisah(void) {
+    printf("------------------------------------------------------------\n");
+}
+
+// untuk menampikan data integer pertama dari array
+void tampil_int(int arr[], int n) {
+    int limit = (n < DISPLAY_COUNT) ? n : DISPLAY_COUNT;
+    for (int i = 0; i < limit; i++)
+        printf("  [%4d] %d\n", i + 1, arr[i]);
+    if (n > DISPLAY_COUNT)
+        printf("  ... (%d data berikutnya tidak ditampilkan)\n",
+               n - DISPLAY_COUNT);
+}
+
+// untuk menampilkan DISPLAY_COUNT kata pertama dari array string
+void tampil_str(char arr[][MAX_WORD_LEN], int n) {
+    int limit = (n < DISPLAY_COUNT) ? n : DISPLAY_COUNT;
+    for (int i = 0; i < limit; i++)
+        printf("  [%4d] %s\n", i + 1, arr[i]);
+    if (n > DISPLAY_COUNT)
+        printf("  ... (%d kata berikutnya tidak ditampilkan)\n",
+               n - DISPLAY_COUNT);
+}
