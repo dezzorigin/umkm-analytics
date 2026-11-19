@@ -36,15 +36,18 @@ echo "$OUT_BUBBLE" | grep -q "Terima kasih! Program selesai." \
 
 # 10 data pertama SETELAH sorting harus menaik — ambil blok setelah
 # "Data SETELAH sorting - Bubble Sort", 10 baris "  [   N] <angka>".
+# CATATAN: pakai kelas [ \t] bukan \s (mawk 1.3.4 tidak kenal \s — pola
+# \s tidak pernah match dan cek ini lolos hampa), dan nilainya adalah
+# $3 ("[", "1]", "2" → $3), bukan $2.
 echo "$OUT_BUBBLE" | awk '
   /Data SETELAH sorting - Bubble Sort/ { in_block=1; next }
-  in_block && /^\s+\[\s*[0-9]+\] [0-9]+$/ {
-    v=$2; n++
+  in_block && /^[ \t]+\[[ \t]*[0-9]+\] [0-9]+$/ {
+    v=$3; n++
     if (prev != "" && v < prev) { print "FAIL: data tidak terurut: " prev " lalu " v; exit 1 }
     prev=v
     if (n==10) exit 0
   }
-  in_block && /^\s+\.\.\./ { exit 0 }
+  in_block && /^[ \t]+\.\.\./ { exit 0 }
 ' || fail "data hasil Bubble Sort tidak terurut menaik"
 
 # --- 2. Merge Sort (menu 2 -> 1 -> kembali -> keluar) -----------------------
@@ -60,13 +63,13 @@ echo "$OUT_MERGE" | grep -qE "Waktu Eksekusi: [0-9]+\.[0-9]+ detik" \
 
 echo "$OUT_MERGE" | awk '
   /Data SETELAH sorting - Merge Sort/ { in_block=1; next }
-  in_block && /^\s+\[\s*[0-9]+\] / {
-    v=$2; n++
+  in_block && /^[ \t]+\[[ \t]*[0-9]+\] / {
+    v=$3; n++
     if (prev != "" && v < prev) { print "FAIL: kata tidak terurut: " prev " lalu " v; exit 1 }
     prev=v
     if (n==10) exit 0
   }
-  in_block && /^\s+\.\.\./ { exit 0 }
+  in_block && /^[ \t]+\.\.\./ { exit 0 }
 ' || fail "kata hasil Merge Sort tidak terurut leksikografis"
 
 # --- 3. Input tidak valid ---------------------------------------------------

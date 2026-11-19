@@ -23,7 +23,7 @@
 <body>
 
 <!-- status bar ala tmux -->
-<header class="statusbar" role="banner">
+<header class="statusbar">
   <span class="statusbar-left">[umkm-analytics] 0:zsh*</span>
   <span class="statusbar-mid">Tugas 2 — Praktikum Struktur Data dan Algoritma B</span>
   <span class="statusbar-right" id="clock">--:--:--</span>
@@ -48,7 +48,7 @@
     tiap algoritma butuh. Tanpa GUI, tanpa server: <code>make</code>,
     jalankan, baca outputnya.</p>
 
-    <div class="terminal" role="region" aria-label="Contoh sesi terminal nyata">
+    <section class="terminal" aria-label="Contoh sesi terminal nyata">
       <div class="term-bar" aria-hidden="true">
         <span class="dot"></span><span class="dot"></span><span class="dot"></span>
         <span class="term-title">nabil@usk: ~/umkm-analytics</span>
@@ -75,7 +75,7 @@ Data SETELAH sorting - Bubble Sort (10 data pertama):
   Waktu Eksekusi: 0.005368 detik
 ------------------------------------------------------------
 <span class="prompt">$</span> <span class="cursor" aria-hidden="true"></span></code></pre>
-    </div>
+    </section>
 
     <div class="actions">
       <button class="btn btn-primary" id="copy-build" type="button">salin perintah build</button>
@@ -122,12 +122,12 @@ Data SETELAH sorting - Bubble Sort (10 data pertama):
     tiap jalan karena datanya diacak.</p>
 
     <h3>1000 integer acak — Sorting Dasar</h3>
-    <pre class="bars" aria-label="Grafik batang waktu eksekusi sorting dasar"><code>Bubble    ████████████████████████████ 0.005368 dtk
+    <pre class="bars"><code>Bubble    ████████████████████████████ 0.005368 dtk
 Insertion ████████                     0.001614 dtk
 Selection ████████████████             0.003065 dtk</code></pre>
 
     <h3>3000 kata (words.txt) — Advance Sorting</h3>
-    <pre class="bars" aria-label="Grafik batang waktu eksekusi advance sorting"><code>Merge ██████████████  0.002673 dtk
+    <pre class="bars"><code>Merge ██████████████  0.002673 dtk
 Quick ███████████     0.002035 dtk
 Shell ███████████████ 0.002914 dtk</code></pre>
 
