@@ -1,0 +1,123 @@
+name: CI
+
+# CI untuk umkm-analytics (repo #41 — tool CLI C pertama di rantai P1).
+# Job:
+#   build-test     — gcc + make, lalu smoke test nyata (make test):
+#                    binary dijalankan, output di-assert (terurut, waktu,
+#                    input tidak valid ditolak). BUKAN echo sukses.
+#   static-checks  — html-validate Node 24 + gate P0 anti-slop + tag OG.
+#   advisory-sweep — OSV batch (pola repo #24-#39); repo ini 0 paket
+#                    produksi, sweep tetap jalan sebagai bukti.
+#   playwright-e2e — landing statis di server lokal (desktop + mobile).
+#   smoke          — file yang di-deploy ada & tidak kosong.
+# Node 24 (html-validate 11 crash di Node 20, pola #29).
+# JANGAN `npx playwright install` di VM dev — hanya di CI.
+#
+# CATATAN LOCKFILE (19 Nov 2026): repo ini BELUM punya package-lock.json.
+# `npm install` gagal deterministik di VM dev — sandbox VM menolak tulis
+# file oleh proses yang sudah melakukan I/O jaringan. Karena itu CI memakai
+# `npm install` (bukan `npm ci`) dan TANPA `cache: npm` di setup-node
+# (keduanya butuh lockfile). Lockfile hasil instalasi CI diunggah sebagai
+# artifact (job static-checks) supaya bisa di-commit belakangan.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── Build C + smoke test nyata ────────────────────────────────────────
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build (gcc + make)
+        run: make
+
+      - name: Smoke test binary (output di-assert)
+        run: make test
+
+      - name: Benchmark 6 algoritma (bukti jalan, log CI)
+        run: |
+          printf '1\n1\n2\n3\n4\n3\n' | ./algoritmaSorting | grep -E 'Algoritma|Jumlah Data|Waktu Eksekusi'
+          printf '2\n1\n2\n3\n4\n3\n' | ./algoritmaSorting | grep -E 'Algoritma|Jumlah Data|Waktu Eksekusi'
+
+  # ── Pemeriksaan statis: HTML + gate P0 + tag OG ───────────────────────
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Validasi HTML
+        run: npx html-validate index.html
+
+      - name: Gate P0 + tag OG/Twitter
+        run: npm run validate
+
+      - name: Unggah package-lock hasil instalasi
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: package-lock
+          path: package-lock.json
+          if-no-files-found: warn
+
+  # ── Advisory sweep (OSV batch, tanpa auth) ────────────────────────────
+  advisory-sweep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: OSV sweep (produksi saja, HIGH/CRITICAL = gagal)
+        run: python3 scripts/advisory-sweep.py
+
+  # ── Playwright e2e terhadap server statis lokal ───────────────────────
+  playwright-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Chromium (hanya di CI — JANGAN di VM dev)
+        run: npx playwright install --with-deps chromium
+
+      - name: Jalankan e2e (desktop + mobile)
+        run: npx playwright test
+
+  # ── Smoke folder repo ─────────────────────────────────────────────────
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Smoke repo (persis yang di-deploy)
+        run: npm run smoke

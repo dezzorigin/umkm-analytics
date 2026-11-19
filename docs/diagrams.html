@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagram Arsitektur — umkm-analytics</title>
+<style>
+  body { margin: 0; background: #12100b; color: #ede6d6;
+    font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; }
+  main { max-width: 920px; margin: 0 auto; padding: 32px 20px 64px; }
+  h1 { font-size: 22px; margin: 0 0 8px; }
+  h1 span { color: #ffb000; }
+  p { color: #8a8272; font-size: 13px; line-height: 1.7; max-width: 68ch; }
+  figure { margin: 32px 0; }
+  figcaption { color: #8a8272; font-size: 12px; margin-top: 12px; }
+  svg { width: 100%; height: auto; display: block; }
+  .box { fill: #1b1813; stroke: #2e2a22; stroke-width: 1.5; }
+  .box-accent { fill: #1b1813; stroke: #ffb000; stroke-width: 1.5; }
+  .box-ok { fill: #1b1813; stroke: #58b368; stroke-width: 1.5; }
+  .t { fill: #ede6d6; font-size: 15px; font-weight: 700; }
+  .s { fill: #8a8272; font-size: 12.5px; }
+  .a { fill: #ffb000; font-size: 12.5px; }
+  .g { fill: #58b368; font-size: 12.5px; }
+  .arrow { stroke: #8a8272; stroke-width: 1.5; fill: none; }
+  .arrow-a { stroke: #ffb000; stroke-width: 1.5; fill: none; }
+  .lbl { fill: #8a8272; font-size: 11.5px; }
+</style>
+</head>
+<body>
+<main>
+  <h1><span>$</span> Diagram Arsitektur — umkm-analytics</h1>
+  <p>Alur program CLI <code>algoritmaSorting</code>: menu utama di
+  <code>main.c</code> memanggil modul sorting, modul memakai utilitas
+  bersama di <code>utils.c</code>, dan advance sorting membaca dataset
+  <code>words.txt</code>. Diagram digambar sebagai SVG murni — bukan
+  Mermaid. Detail tiap modul: <code>docs/ARCHITECTURE.md</code>.</p>
+
+  <figure>
+    <svg viewBox="0 0 880 620" role="img" aria-label="Diagram arsitektur: main.c memanggil basic_sorting dan advance_sorting, keduanya memakai utils.c, advance memakai words.txt">
+      <defs>
+        <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+          <path d="M0,0 L8,4 L0,8 z" fill="#8a8272"></path>
+        </marker>
+        <marker id="ah-a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+          <path d="M0,0 L8,4 L0,8 z" fill="#ffb000"></path>
+        </marker>
+      </defs>
+
+      <!-- pengguna -->
+      <rect class="box-accent" x="300" y="16" width="280" height="64" rx="2"></rect>
+      <text class="t" x="440" y="44" text-anchor="middle">pengguna (stdin)</text>
+      <text class="s" x="440" y="66" text-anchor="middle">pilih menu 1 / 2 / 3</text>
+
+      <path class="arrow-a" d="M440 80 V112" marker-end="url(#ah-a)"></path>
+
+      <!-- main -->
+      <rect class="box-accent" x="280" y="112" width="320" height="84" rx="2"></rect>
+      <text class="t" x="440" y="142" text-anchor="middle">src/main.c</text>
+      <text class="s" x="440" y="164" text-anchor="middle">menu utama + header program</text>
+      <text class="s" x="440" y="184" text-anchor="middle">tolak input tidak valid</text>
+
+      <path class="arrow" d="M360 196 V240" marker-end="url(#ah)"></path>
+      <path class="arrow" d="M520 196 V240" marker-end="url(#ah)"></path>
+      <text class="lbl" x="330" y="222" text-anchor="middle">1</text>
+      <text class="lbl" x="550" y="222" text-anchor="middle">2</text>
+
+      <!-- basic -->
+      <rect class="box" x="40" y="240" width="360" height="120" rx="2"></rect>
+      <text class="t" x="220" y="270" text-anchor="middle">src/basic_sorting.c</text>
+      <text class="a" x="220" y="294" text-anchor="middle">Bubble · Insertion · Selection</text>
+      <text class="s" x="220" y="316" text-anchor="middle">generate 1000 int acak (1–10000)</text>
+      <text class="s" x="220" y="336" text-anchor="middle">shuffle → sort → ukur clock()</text>
+
+      <!-- advance -->
+      <rect class="box" x="480" y="240" width="360" height="120" rx="2"></rect>
+      <text class="t" x="660" y="270" text-anchor="middle">src/advance_sorting.c</text>
+      <text class="a" x="660" y="294" text-anchor="middle">Merge · Quick · Shell</text>
+      <text class="s" x="660" y="316" text-anchor="middle">muat words.txt sekali (g_words)</text>
+      <text class="s" x="660" y="336" text-anchor="middle">salin → g_work → shuffle → sort</text>
+
+      <path class="arrow" d="M220 360 V404" marker-end="url(#ah)"></path>
+      <path class="arrow" d="M660 360 V404" marker-end="url(#ah)"></path>
+
+      <!-- utils -->
+      <rect class="box-ok" x="240" y="404" width="400" height="108" rx="2"></rect>
+      <text class="t" x="440" y="434" text-anchor="middle">src/utils.c</text>
+      <text class="g" x="440" y="458" text-anchor="middle">swap · shuffle Fisher-Yates</text>
+      <text class="s" x="440" y="480" text-anchor="middle">tampil 10 pertama · load_words()</text>
+      <text class="s" x="440" y="500" text-anchor="middle">MAX_DATA 1000 · MAX_WORDS 450000</text>
+
+      <path class="arrow" d="M680 470 H648" marker-end="url(#ah)"></path>
+      <text class="lbl" x="664" y="452" text-anchor="middle">load</text>
+
+      <!-- words.txt -->
+      <rect class="box" x="680" y="404" width="180" height="108" rx="2"></rect>
+      <text class="t" x="770" y="434" text-anchor="middle">words.txt</text>
+      <text class="s" x="770" y="458" text-anchor="middle">3000 kata</text>
+      <text class="s" x="770" y="480" text-anchor="middle">dataset advance</text>
+      <text class="s" x="770" y="500" text-anchor="middle">sorting</text>
+
+      <path class="arrow" d="M440 512 V556" marker-end="url(#ah)"></path>
+
+      <!-- output -->
+      <rect class="box" x="180" y="556" width="520" height="48" rx="2"></rect>
+      <text class="s" x="440" y="586" text-anchor="middle">stdout: 10 data pertama tiap tahap + ringkasan (nama · jumlah · waktu)</text>
+    </svg>
+    <figcaption>Gambar 1 — Alur modul dan data program. Panah "1"/"2"
+    adalah pilihan menu utama. <code>utils.c</code> dipakai kedua modul
+    sorting; <code>words.txt</code> hanya dipakai advance sorting.</figcaption>
+  </figure>
+
+  <figure>
+    <svg viewBox="0 0 880 190" role="img" aria-label="Diagram alur satu pilihan menu: generate atau muat data, tampilkan, shuffle, sort dan ukur, tampilkan hasil">
+      <defs>
+        <marker id="ah2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+          <path d="M0,0 L8,4 L0,8 z" fill="#8a8272"></path>
+        </marker>
+      </defs>
+      <rect class="box" x="8" y="60" width="150" height="70" rx="2"></rect>
+      <text class="t" x="83" y="90" text-anchor="middle" font-size="13">1 · data</text>
+      <text class="s" x="83" y="112" text-anchor="middle">generate / muat</text>
+      <path class="arrow" d="M158 95 H182" marker-end="url(#ah2)"></path>
+      <rect class="box" x="182" y="60" width="150" height="70" rx="2"></rect>
+      <text class="t" x="257" y="90" text-anchor="middle" font-size="13">2 · tampil</text>
+      <text class="s" x="257" y="112" text-anchor="middle">10 pertama</text>
+      <path class="arrow" d="M332 95 H356" marker-end="url(#ah2)"></path>
+      <rect class="box" x="356" y="60" width="150" height="70" rx="2"></rect>
+      <text class="t" x="431" y="90" text-anchor="middle" font-size="13">3 · shuffle</text>
+      <text class="s" x="431" y="112" text-anchor="middle">Fisher-Yates</text>
+      <path class="arrow" d="M506 95 H530" marker-end="url(#ah2)"></path>
+      <rect class="box-accent" x="530" y="60" width="170" height="70" rx="2"></rect>
+      <text class="t" x="615" y="90" text-anchor="middle" font-size="13">4 · sort + ukur</text>
+      <text class="s" x="615" y="112" text-anchor="middle">clock() sekitar sort</text>
+      <path class="arrow" d="M700 95 H724" marker-end="url(#ah2)"></path>
+      <rect class="box-ok" x="724" y="60" width="148" height="70" rx="2"></rect>
+      <text class="t" x="798" y="90" text-anchor="middle" font-size="13">5 · hasil</text>
+      <text class="s" x="798" y="112" text-anchor="middle">terurut + waktu</text>
+      <text class="lbl" x="440" y="30" text-anchor="middle">Alur satu pilihan menu — sama untuk keenam algoritma</text>
+    </svg>
+    <figcaption>Gambar 2 — Lima langkah yang diulang tiap pilihan
+    algoritma. Langkah 4 adalah satu-satunya yang diukur waktunya.</figcaption>
+  </figure>
+</main>
+</body>
+</html>

@@ -1,0 +1,24 @@
+# Hasil build C
+algoritmaSorting
+*.o
+*.out
+*.a
+*.so
+
+# Node (landing + CI tooling)
+node_modules/
+package-lock.json
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Editor / OS
+.DS_Store
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Artefak lokal
+*.log
