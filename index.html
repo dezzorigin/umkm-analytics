@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>umkm-analytics — 6 algoritma sorting di C, diukur waktunya</title>
+<meta name="description" content="Tool CLI bahasa C: Bubble, Insertion, Selection, Merge, Quick, dan Shell Sort — lengkap dengan pengukuran waktu eksekusi. Tugas 2 Praktikum Struktur Data dan Algoritma B.">
+<meta property="og:title" content="umkm-analytics — 6 algoritma sorting di C, diukur waktunya">
+<meta property="og:description" content="Tool CLI bahasa C: Bubble, Insertion, Selection, Merge, Quick, dan Shell Sort — lengkap dengan pengukuran waktu eksekusi. Build dengan make, jalankan, lihat output aslinya.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://umkm-analytics.pages.dev/">
+<meta property="og:image" content="https://umkm-analytics.pages.dev/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="umkm-analytics — 6 algoritma sorting di C, diukur waktunya">
+<meta name="twitter:description" content="Tool CLI bahasa C: Bubble, Insertion, Selection, Merge, Quick, dan Shell Sort — lengkap dengan pengukuran waktu eksekusi.">
+<meta name="twitter:image" content="https://umkm-analytics.pages.dev/og-image.png">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- status bar ala tmux -->
+<header class="statusbar" role="banner">
+  <span class="statusbar-left">[umkm-analytics] 0:zsh*</span>
+  <span class="statusbar-mid">Tugas 2 — Praktikum Struktur Data dan Algoritma B</span>
+  <span class="statusbar-right" id="clock">--:--:--</span>
+</header>
+
+<main>
+  <!-- nav ala ls -->
+  <nav class="lsnav" aria-label="Navigasi halaman">
+    <span class="prompt">$</span> ls
+    <a href="#demo">demo/</a>
+    <a href="#algoritma">algoritma/</a>
+    <a href="#benchmark">benchmark/</a>
+    <a href="#cara-pakai">cara-pakai/</a>
+    <a href="#struktur">struktur/</a>
+  </nav>
+
+  <!-- hero: jendela terminal -->
+  <section class="hero" id="demo" aria-labelledby="hero-title">
+    <h1 id="hero-title">6 algoritma sorting.<br>Satu binary C. <span class="amber">Waktu diukur.</span></h1>
+    <p class="lede">Tool CLI bahasa C yang mengurutkan 1.000 integer acak dan
+    3.000 kata dari <code>words.txt</code> — lalu mencetak berapa detik
+    tiap algoritma butuh. Tanpa GUI, tanpa server: <code>make</code>,
+    jalankan, baca outputnya.</p>
+
+    <div class="terminal" role="region" aria-label="Contoh sesi terminal nyata">
+      <div class="term-bar" aria-hidden="true">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="term-title">nabil@usk: ~/umkm-analytics</span>
+      </div>
+      <pre class="term-body"><code><span class="prompt">$</span> make
+gcc -O0 -Wall -o algoritmaSorting src/main.c src/utils.c src/basic_sorting.c src/advance_sorting.c
+<span class="prompt">$</span> printf '1\n1\n4\n3\n' | ./algoritmaSorting
+============================================================
+  Tugas 2 Praktikum Struktur Data dan Algoritma B
+  Implementasi dan Analisis Algoritma Sorting - Bahasa C
+============================================================
+...
+Data SETELAH sorting - Bubble Sort (10 data pertama):
+------------------------------------------------------------
+  [   1] 2
+  [   2] 32
+  [   3] 34
+  [   4] 36
+  [   5] 46
+  ...
+------------------------------------------------------------
+  Algoritma     : Bubble Sort
+  Jumlah Data   : 1000 integer
+  Waktu Eksekusi: 0.005368 detik
+------------------------------------------------------------
+<span class="prompt">$</span> <span class="cursor" aria-hidden="true"></span></code></pre>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="copy-build" type="button">salin perintah build</button>
+      <a class="btn btn-ghost" href="https://github.com/dezzorigin/umkm-analytics">lihat kode di GitHub</a>
+      <span class="copy-note" id="copy-note" role="status" aria-live="polite"></span>
+    </div>
+    <p class="fineprint"># output di atas adalah kutipan asli dari satu kali jalan
+    (VM, gcc 13.3.0, -O0). Angka waktu berubah tiap jalan — data diacak
+    dengan srand(time).</p>
+  </section>
+
+  <!-- algoritma: tab -->
+  <section id="algoritma" aria-labelledby="algo-title">
+    <h2><span class="prompt">$</span> cat algoritma/*.md</h2>
+    <p class="section-lede">Enam algoritma, dua kelompok data. Pilih satu —
+    panel di bawah ini menampilkan kutipan output aslinya.</p>
+
+    <div class="tabs" role="tablist" aria-label="Algoritma sorting">
+      <button role="tab" id="tab-bubble" aria-selected="true" aria-controls="panel-output" data-algo="bubble" type="button">Bubble Sort</button>
+      <button role="tab" id="tab-insertion" aria-selected="false" aria-controls="panel-output" data-algo="insertion" type="button" tabindex="-1">Insertion Sort</button>
+      <button role="tab" id="tab-selection" aria-selected="false" aria-controls="panel-output" data-algo="selection" type="button" tabindex="-1">Selection Sort</button>
+      <button role="tab" id="tab-merge" aria-selected="false" aria-controls="panel-output" data-algo="merge" type="button" tabindex="-1">Merge Sort</button>
+      <button role="tab" id="tab-quick" aria-selected="false" aria-controls="panel-output" data-algo="quick" type="button" tabindex="-1">Quick Sort</button>
+      <button role="tab" id="tab-shell" aria-selected="false" aria-controls="panel-output" data-algo="shell" type="button" tabindex="-1">Shell Sort</button>
+    </div>
+
+    <div class="algo-meta" id="algo-meta">
+      <span><strong>Kelompok:</strong> Sorting Dasar</span>
+      <span><strong>Data:</strong> 1000 integer acak (1–10000)</span>
+      <span><strong>Kompleksitas:</strong> O(n²)</span>
+    </div>
+
+    <pre class="term-body panel" id="panel-output" role="tabpanel" aria-labelledby="tab-bubble" tabindex="0"><code id="panel-code"></code></pre>
+    <p class="fineprint"># tiap tab berasal dari jalan yang berbeda — angka waktu
+    bisa sedikit berbeda antar jalan. Yang tidak berubah: hasilnya selalu
+    terurut (diuji CI dengan <code>make test</code>).</p>
+  </section>
+
+  <!-- benchmark: bar ASCII -->
+  <section id="benchmark" aria-labelledby="bench-title">
+    <h2><span class="prompt">$</span> ./algoritmaSorting --benchmark</h2>
+    <p class="section-lede">Contoh satu kali jalan penuh (19 Nov 2026, VM,
+    gcc 13.3.0, <code>-O0</code>). Bukan janji performa — waktu berubah
+    tiap jalan karena datanya diacak.</p>
+
+    <h3>1000 integer acak — Sorting Dasar</h3>
+    <pre class="bars" aria-label="Grafik batang waktu eksekusi sorting dasar"><code>Bubble    ████████████████████████████ 0.005368 dtk
+Insertion ████████                     0.001614 dtk
+Selection ████████████████             0.003065 dtk</code></pre>
+
+    <h3>3000 kata (words.txt) — Advance Sorting</h3>
+    <pre class="bars" aria-label="Grafik batang waktu eksekusi advance sorting"><code>Merge ██████████████  0.002673 dtk
+Quick ███████████     0.002035 dtk
+Shell ███████████████ 0.002914 dtk</code></pre>
+
+    <p class="fineprint"># kedua kelompok memakai dataset berbeda — jangan
+    bandingkan Bubble dengan Quick secara langsung. Yang dibandingkan:
+    antar algoritma dalam kelompok yang sama.</p>
+  </section>
+
+  <!-- cara pakai -->
+  <section id="cara-pakai" aria-labelledby="usage-title">
+    <h2><span class="prompt">$</span> man algoritmaSorting</h2>
+    <ol class="steps">
+      <li>
+        <p class="step-cmd">git clone https://github.com/dezzorigin/umkm-analytics.git</p>
+        <p>Butuh: <code>gcc</code> + <code>make</code>. Tanpa dependensi lain.</p>
+      </li>
+      <li>
+        <p class="step-cmd">make</p>
+        <p>Menghasilkan binary <code>./algoritmaSorting</code>. Pesan
+        <code>clean</code> tersedia: <code>make clean</code>.</p>
+      </li>
+      <li>
+        <p class="step-cmd">./algoritmaSorting</p>
+        <p>Menu interaktif: <strong>1</strong> Sorting Dasar (Bubble /
+        Insertion / Selection, 1000 integer), <strong>2</strong> Advance
+        Sorting (Merge / Quick / Shell, 3000 kata dari
+        <code>words.txt</code>), <strong>3</strong> keluar. Tiap pilihan
+        menampilkan data sebelum shuffle, sesudah shuffle, sesudah sorting,
+        lalu waktu eksekusi.</p>
+      </li>
+      <li>
+        <p class="step-cmd">make test</p>
+        <p>Smoke test: menjalankan binary dan meng-assert outputnya —
+        hasil Bubble terurut menaik, hasil Merge terurut leksikografis,
+        input tidak valid ditolak. Dipakai juga oleh CI.</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- struktur -->
+  <section id="struktur" aria-labelledby="tree-title">
+    <h2><span class="prompt">$</span> find . -type f | sort</h2>
+    <pre class="term-body tree"><code>.
+├── Makefile                  <span class="dim"># build + test + clean</span>
+├── README.md
+├── LICENSE                   <span class="dim"># MIT</span>
+├── words.txt                 <span class="dim"># 3000 kata, dataset advance sorting</span>
+├── src/
+│   ├── main.c                <span class="dim"># menu utama</span>
+│   ├── utils.c / utils.h     <span class="dim"># swap, shuffle Fisher-Yates, tampil, load_words</span>
+│   ├── basic_sorting.c/.h    <span class="dim"># bubble, insertion, selection</span>
+│   └── advance_sorting.c/.h  <span class="dim"># merge, quick (median-of-three), shell</span>
+├── scripts/
+│   ├── smoke-test.sh         <span class="dim"># assert output binary</span>
+│   └── advisory-sweep.py     <span class="dim"># OSV sweep, 0 dep produksi</span>
+├── docs/                     <span class="dim"># PRD, arsitektur, cara pakai, testing, deploy, DESIGN</span>
+└── e2e/                      <span class="dim"># Playwright (landing, CI saja)</span></code></pre>
+  </section>
+</main>
+
+<!-- status bar bawah ala tmux -->
+<footer class="statusbar statusbar-foot">
+  <span>[umkm-analytics] MIT — Virzi Mayhand Syahputra · Nabil Aulia Dika · Ahmad Wazir Sahfikri</span>
+  <span><a href="https://github.com/dezzorigin/umkm-analytics">github.com/dezzorigin/umkm-analytics</a></span>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
